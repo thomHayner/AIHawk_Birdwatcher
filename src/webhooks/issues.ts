@@ -15,4 +15,8 @@ export default async function issueOpened(context: any): Promise<any> {
   });
   return await issueComment;
 
+  // POSSIBLY---
+  // - ask follow up questions
+  // - edit the user's initial non-templated comment to reformat it into the appropriate template
+  // - respond with FAQ answers to common questions
 };

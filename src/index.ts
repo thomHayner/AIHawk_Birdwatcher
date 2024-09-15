@@ -1,4 +1,7 @@
 import { Probot } from "probot";
+import OpenAiClient from 'openai';
+
+const openAiIssuesResponder = new OpenAiClient({ apiKey: process.env.OPENAI_API_KEY });
 
 export default (app: Probot) => {
   app.on("issues.opened", async (context) => {

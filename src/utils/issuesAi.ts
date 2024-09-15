@@ -1,4 +1,5 @@
 // A "High Conversation" AI Model for comment analysis
+// i.e. gpt-4o-mini for cost savings
 import OpenAi from 'openai';
 import type { OpenAI } from 'openai/src/index.js';
 import type { IssueContextObj } from './aiTypes.js';

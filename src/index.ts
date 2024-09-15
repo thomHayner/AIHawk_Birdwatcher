@@ -1,15 +1,13 @@
 import { Probot } from "probot";
 import { mainTest } from "./utils/issuesAi.js";
+import issueOpened from "./webhooks/issues.js";
 
 export default (app: Probot) => {
+
   app.on("issues.opened", async (context) => {
     // console.log(context)
-    const issueComment = context.issue({
-      body: mainTest(context)
-    });
-    // const issueComment = context.issue({
-    //   body: `Hi there @${context.payload.sender.login}, thanks for opening this issue! Please join us on Telegram to discuss this issue in greater detail! \n\n [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/AIhawkCommunity)`,
-    // });
+
+    const issueComment = await issueOpened(context)
     await context.octokit.issues.createComment(issueComment);
   });
 

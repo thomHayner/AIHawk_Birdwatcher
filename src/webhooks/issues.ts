@@ -9,10 +9,11 @@ export default async function issueOpened(context: any): Promise<any> {
   //   body: `${mainTest(context)}`
   // });
 
-  // Return a complete comment body as a respose to the new issue
+  // Build a complete comment body as a respose to the new issue
   const issueComment = context.issue({
     body: greeting,
   });
+
   return await issueComment;
 
   // POSSIBLY---

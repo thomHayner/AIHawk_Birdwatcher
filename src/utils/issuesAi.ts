@@ -1,16 +1,7 @@
+// A "High Conversation" AI Model for comment analysis
 import OpenAi from 'openai';
 import type { OpenAI } from 'openai/src/index.js';
-
-type IssueContextObj = {
-  payload: {
-    issue: {
-      sender: {
-        login: any;
-      };
-      title: any;
-    };
-  };
-};
+import type { IssueContextObj } from './aiTypes.js';
 
 const issuesAiClient = new OpenAi({ apiKey: process.env.OPENAI_API_KEY });
 

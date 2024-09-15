@@ -4,6 +4,7 @@ import issueOpened from "./webhooks/issues.js";
 
 export default (app: Probot) => {
 
+  // When a new issue is opened
   app.on("issues.opened", async (context) => {
     // console.log(context)
 
@@ -11,7 +12,11 @@ export default (app: Probot) => {
     await context.octokit.issues.createComment(issueComment);
   });
 
+  // When an existing issue is commented on
   app.on("issue_comment.created", async (context) => {
+    // console.log(context)
+
+    // Exclude replies made by this bot
     if (context.payload.sender.login === "ai-hawk-falconiere[bot]") {
       return
     }
@@ -21,6 +26,10 @@ export default (app: Probot) => {
     });
     await context.octokit.issues.createComment(issueComment);
   });
+
+  // When a new Pull Request is opened
+
+
   // For more information on building apps:
   // https://probot.github.io/docs/
 

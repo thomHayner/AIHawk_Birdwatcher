@@ -6,7 +6,7 @@ export default async function issueOpened(context: any): Promise<any> {
   
   // ChatGPT check/analyze for duplicate issues, add tags
   // const issueComment = context.issue({
-  //   body: `${mainTest(context)}`
+  //   body: `${mainTest(context)}`,
   // });
 
   // Build a complete comment body as a respose to the new issue

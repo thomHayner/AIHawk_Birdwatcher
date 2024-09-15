@@ -1,5 +1,6 @@
 import { Probot } from "probot";
 import issueOpened from "./webhooks/issues.js";
+import issueCommentCreated from "./webhooks/issue_comments.js";
 
 export default (app: Probot) => {
 
@@ -19,10 +20,8 @@ export default (app: Probot) => {
     if (context.payload.sender.login === "ai-hawk-falconiere[bot]") {
       return
     }
-    
-    const issueComment = context.issue({
-      body: "ahhhhhh" // mainTest(context)
-    });
+
+    const issueComment = await issueCommentCreated(context)
     await context.octokit.issues.createComment(issueComment);
   });
 

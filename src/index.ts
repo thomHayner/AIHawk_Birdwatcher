@@ -1,5 +1,4 @@
 import { Probot } from "probot";
-import { mainTest } from "./utils/issuesAi.js";
 import issueOpened from "./webhooks/issues.js";
 
 export default (app: Probot) => {
@@ -20,7 +19,7 @@ export default (app: Probot) => {
     if (context.payload.sender.login === "ai-hawk-falconiere[bot]") {
       return
     }
-    console.log(context)
+    
     const issueComment = context.issue({
       body: "ahhhhhh" // mainTest(context)
     });

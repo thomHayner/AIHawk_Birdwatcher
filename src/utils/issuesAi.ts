@@ -1,4 +1,4 @@
-// A "High Conversation" AI Model for comment analysis and responses
+// A 'High Conversation' AI Model for comment analysis and responses
 // i.e. gpt-4o-mini for cost savings
 import OpenAi from 'openai';
 import type { OpenAI } from 'openai/src/index.js';
@@ -6,12 +6,7 @@ import type { IssueContextObj } from './aiTypes.js';
 
 const issuesAiClient = new OpenAi({ apiKey: process.env.OPENAI_API_KEY });
 
-export async function issueOpenedCompletion(context: IssueContextObj | any) {
-  const params: OpenAI.Chat.ChatCompletionCreateParams = {
-    messages: [
-      {
-        role: 'system',
-        content: `You are an intelligent Software Engineer working on an open \
+const systemPrompt:string = `You are an intelligent Software Engineer working on an open \
         source project as one of the maintainers of its GitHub repository. One \
         of your tasks is management and moderation of community contributions \
         within the Issues feature; GitHub describes the Issues feature in the \
@@ -31,7 +26,14 @@ export async function issueOpenedCompletion(context: IssueContextObj | any) {
         You interact with the repository through a bot that is limited to pre-\
         programmed interactions with the GitHub API. For now you will simply \
         reply with a single response, in the future you will have more \
-        functionality\n\nThe next message will contain a new issue`,
+        functionality\n\nThe next message will contain a new issue`;
+
+export async function issueOpenedCompletion(context:IssueContextObj | any) {
+  const params:OpenAI.Chat.ChatCompletionCreateParams = {
+    messages: [
+      {
+        role: 'system',
+        content: systemPrompt,
       },
       {
         role: 'user',
@@ -40,13 +42,27 @@ export async function issueOpenedCompletion(context: IssueContextObj | any) {
     ],
     model: 'gpt-4o-mini',
   };
-  
-  const chatCompletion: OpenAI.Chat.ChatCompletion = await issuesAiClient.chat.completions.create(params);
+  const chatCompletion:OpenAI.Chat.ChatCompletion = await issuesAiClient.chat.completions.create(params);
+  const aiResponse:string = chatCompletion.choices.map(n=>n.message.content).join(`\n`);
+  return aiResponse
+};
 
-  // console.log(chatCompletion.choices[0].message.content)
-  // const aiResponse chatCompletion.choices[0].message.content;
-  
-  const aiResponse: string = chatCompletion.choices.map(n=>n.message.content).join(`\n`);
-  
+export async function issueCommentCompletion(context:IssueContextObj | any, messages:any) {
+  const params:OpenAI.Chat.ChatCompletionCreateParams = {
+    messages: [
+      {
+        role: 'system',
+        content: systemPrompt,
+      },
+      {
+        role: 'user',
+        content: `${context.payload.issue.title}: ${context.payload.issue.body}`,
+      },
+      ...messages
+    ],
+    model: 'gpt-4o-mini',
+  };
+  const chatCompletion:OpenAI.Chat.ChatCompletion = await issuesAiClient.chat.completions.create(params);
+  const aiResponse:string = chatCompletion.choices.map(n=>n.message.content).join(`\n`);
   return aiResponse
 };

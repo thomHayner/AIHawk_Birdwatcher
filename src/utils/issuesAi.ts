@@ -20,10 +20,11 @@ export async function issueOpenedCompletion(context: IssueContextObj | any) {
   };
   
   const chatCompletion: OpenAI.Chat.ChatCompletion = await issuesAiClient.chat.completions.create(params);
-  // console.log(chatCompletion.choices[0].message)
-  
-  // return chatCompletion.choices[0].message.content
 
-  const aiResponse = chatCompletion.choices.map(n=>n.message.content).join(`\n\n`);
+  // console.log(chatCompletion.choices[0].message.content)
+  // const aiResponse chatCompletion.choices[0].message.content;
+  
+  const aiResponse: string = chatCompletion.choices.map(n=>n.message.content).join(`\n`);
+  
   return aiResponse
 };

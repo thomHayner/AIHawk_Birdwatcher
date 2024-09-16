@@ -13,7 +13,7 @@ export default (app: Probot) => {
   });
 
   // When an existing issue's originating comment is edited:
-  
+
 
   // When an existing issue is commented on
   app.on("issue_comment.created", async (context) => {

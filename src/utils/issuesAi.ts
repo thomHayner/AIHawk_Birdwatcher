@@ -6,9 +6,16 @@ import type { IssueContextObj } from './aiTypes.js';
 
 const issuesAiClient = new OpenAi({ apiKey: process.env.OPENAI_API_KEY });
 
-export async function mainTest(context: IssueContextObj | any) {
+export async function mainTest(context: IssueContextObj | any) {};
+
+export async function issueOpenedCompletion(context: IssueContextObj | any) {
   const params: OpenAI.Chat.ChatCompletionCreateParams = {
-    messages: [{ role: 'user', content: `Say this is a test of @${context.payload.sender.login}'s comment saying ${context.payload.comment.body}...` }],
+    messages: [
+      {
+        role: 'user',
+        content: `${context.payload.issue.title}: ${context.payload.issue.body}`,
+      },
+    ],
     model: 'gpt-4o-mini',
   };
   

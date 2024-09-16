@@ -12,7 +12,29 @@ export default (app: Probot) => {
     await context.octokit.issues.createComment(issueComment);
   });
 
+  /*
+  * sometimes we will want to edit the original comment to apply a template
+  * this will usually happen when a non-technical user opens a new issue 
+  * or when someone opens a general issue
+  * in those instances we will want to perform 'information gathering' by asking questions
+  * then we will will either: 
+  *   # edit the issue title and the original comment to apply the appropriate template with the relevant info,
+  *   # and then hide all of the comments from the 'information gathering' process
+  *   # OR
+  *   # create a new issue with an appropriate title, template and relevant information
+  *   # reference the old issue, attribute the old issue's creator and subscribe them to updates, and lastly close the old issue
+  */
   // When an existing issue's originating comment is edited:
+    // check if the edit came from the bot
+      // if yes
+        // double check to make sure that it was the bot applying the template\
+        // apply any necessary labels
+        // hide all other comments from 'information gathering process'
+        // consider the issue properly templated and ready to proceed or otherwise be dealt with
+      // if no
+        // re-scan the edited comment
+        // analyze and consider any new information
+        // proceed as is appropriate
 
 
   // When an existing issue is commented on

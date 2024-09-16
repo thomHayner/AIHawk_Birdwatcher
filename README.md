@@ -1,6 +1,6 @@
-# AI_Falconiere
+# LinkedIn_AIHawk_Birdwatcher
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that An issues wrangler as well as an FAQ and troubleshooting bot agent for AI Hawk
+> A GitHub App built with [Probot](https://github.com/probot/probot) and integrated with OpenAI.  An intelligent GitHub Repository Maintainer Agent for: triaging Issues, reviewing Pull Requests, and moderating Discussions; can be trained on a repository Wiki as well for FAQ and troubleshooting, backwards compatible for existing repositories have issues, pr and discussions histories.
 
 ## Setup
 

@@ -1,8 +1,8 @@
-import { mainTest } from "../utils/issuesAi.js";
+import { issueOpenedCompletion } from "../utils/issuesAi.js";
 
 export default async function issueCommentCreated(context: any): Promise<any> {
   // ChatGPT check/analyze for duplicate issues, add tags
-  const aiResponseMessage = await mainTest(context);
+  const aiResponseMessage = await issueOpenedCompletion(context);
 
   // Build a ProBot comment object as a respose to the incoming comment
   const issueComment = context.issue({

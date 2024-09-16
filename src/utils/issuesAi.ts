@@ -6,8 +6,6 @@ import type { IssueContextObj } from './aiTypes.js';
 
 const issuesAiClient = new OpenAi({ apiKey: process.env.OPENAI_API_KEY });
 
-export async function mainTest(context: IssueContextObj | any) {};
-
 export async function issueOpenedCompletion(context: IssueContextObj | any) {
   const params: OpenAI.Chat.ChatCompletionCreateParams = {
     messages: [

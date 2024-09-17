@@ -4,8 +4,14 @@ export default async function issueCommentCreated(context: any): Promise<any> {
   // ChatGPT check/analyze for duplicate issues, add tags
 
   // Fetch all previous comments and turn them into a conversation with an OpenAI Assistant 
-  async function fetchMessages() { 
+  async function fetchMessages() {
     const response = await fetch(context.payload.issue.comments_url);
+
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}`;
+      throw new Error(message);
+    }
+
     const data = await response.json();
     const messages = await data.map( (n:any) => {
       return {
@@ -15,6 +21,10 @@ export default async function issueCommentCreated(context: any): Promise<any> {
     });
     return messages
   }
+  fetchMessages().catch(error => {
+    error.message; // 'An error has occurred: 404'
+  });
+
   const messages = await fetchMessages();
 
   // Get an OpenAI chat completion based on the entire conversation

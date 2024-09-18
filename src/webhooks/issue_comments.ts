@@ -19,8 +19,9 @@ export default async function issueCommentCreated(context: any): Promise<any> {
         content: n.body,
       }
     });
+
     return messages
-  }
+  };
   fetchMessages().catch(error => {
     error.message; // 'An error has occurred: 404'
   });

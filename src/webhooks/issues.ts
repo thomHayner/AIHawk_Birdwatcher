@@ -1,4 +1,4 @@
-import { issueOpenedCompletion } from "../utils/issuesAi.js";
+import { issueOpenedCompletion } from "../completions/issuesAi.js";
 
 export default async function issueOpened(context: any): Promise<any> {
   // Greet the user and direct them to Telegram

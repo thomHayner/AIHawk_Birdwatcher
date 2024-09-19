@@ -1,5 +1,3 @@
-// A 'High Conversation' AI Model for comment analysis and responses
-// i.e. gpt-4o-mini for cost savings
 import OpenAi from 'openai';
 import type { OpenAI } from 'openai/src/index.js';
 import type { IssueContextObj } from '../utils/aiObjectTyping.js';
@@ -46,18 +44,14 @@ const taskPrompt:string = `\
   - The Issue Report templates are stored in .yml files. The template will be provided after you pick a primary label\n
   - Each primary label has a corresponding template.\n
   \n
-  The next message will contain a new issue. \
-  If the author provided one or more labels, confirm that they are appropriate. \
-  If the author provided more than one label, you should pick the most appropriate primary label. \
-  If the author did not provide any labels and there is enough information in the new issue you should pick a primary label, \
-  otherwise, ask follow up questions until you can determine the appropriate primary label.\n
-  \n
-  When you have enough information to determine the primary label, respond with "PRIMARY_LABEL: *****" (replace the ***** with your choice).\
-`
-
+  The next message will contain a new issue. \n
+  If there is enough information in the new issue you should pick a primary label and respond with only "PRIMARY_LABEL: *****" (replace the ***** with your choice). \n
+  Otherwise, ask follow up questions until you can determine the appropriate primary label.\n
+  `
+  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function issueOpenedCompletion(context:IssueContextObj | any) {
+export async function issueOpenedCompletion(context:IssueContextObj) {
   const issue = context.payload.issue;
   const params:OpenAI.Chat.ChatCompletionCreateParams = {
     messages: [
@@ -73,19 +67,39 @@ export async function issueOpenedCompletion(context:IssueContextObj | any) {
         role: 'user',
         content: `${issue.labels.length > 0 ? 'Labels: ' + issue.labels.map((n:any) => n.name + ', ') + ' ' : ''}${issue.title}: ${issue.body}`,
       },
+      // this is just for testing
+      // {
+      //   role: 'assistant',
+      //   content: `PRIMARY_LABEL: bug`,
+      // },
+      ///// end of testing
     ],
-    model: 'gpt-4o-mini',
+    model: 'gpt-4o',
   };
 
   // If the AI has enough info to complete an issue template
   const chatCompletion:OpenAI.Chat.ChatCompletion = await issuesAiClient.chat.completions.create(params);
-  const aiResponse:string = chatCompletion.choices.map(n=>n.message.content).join(`\n`);
+  // const aiResponse:string = chatCompletion.choices.map(n=>n.message.content).join(`\n`);
+  const aiResponse:string = chatCompletion.choices[0].message.content + `\n`;
+  
+  // 
+  if (aiResponse.includes("PRIMARY_LABEL: ")) {
+    context.octokit.issues.addLabels(
+      context.issue({
+        issue_number: issue.number,
+        // begin static testin
+        labels: ["bug"],
+        ///// end static testing
+      })
+    )
+  };
+
   return aiResponse
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function issueCommentCompletion(context:IssueContextObj | any, messages:any, primaryLabel?:string, template?:any) {
+export async function issueCommentCompletion(context:IssueContextObj | any, messages:any) {
   const issue = context.payload.issue;
   const params:OpenAI.Chat.ChatCompletionCreateParams = {
     messages: [
@@ -103,7 +117,7 @@ export async function issueCommentCompletion(context:IssueContextObj | any, mess
       },
       ...messages
     ],
-    model: 'gpt-4o-mini',
+    model: 'gpt-4o',
   };
   const chatCompletion:OpenAI.Chat.ChatCompletion = await issuesAiClient.chat.completions.create(params);
   const aiResponse:string = chatCompletion.choices.map(n=>n.message.content).join(`\n`);

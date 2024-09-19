@@ -1,13 +1,18 @@
 import { Probot } from "probot";
-import issueOpened from "./webhooks/issues.js";
+import issueOpenedIntake from "./workflows/issueIntake.js";
+// import issueOpened from "./webhooks/issues.js";
 import issueCommentCreated from "./webhooks/issue_comments.js";
 
 export default (app: Probot) => {
 
   // When a new issue is opened:
   app.on("issues.opened", async (context) => {
-    const issueComment = await issueOpened(context)
-    await context.octokit.issues.createComment(issueComment);
+
+    // Begin the 'Issue Intake' workflow to
+    // - assign a 'Primary Label'
+    // - generate an 'Official Bug Report' from a template
+    const issueResponse = await issueOpenedIntake(context)
+    // await context.octokit.issues.createComment(issueResponse);
   });
 
   /*
@@ -37,7 +42,15 @@ export default (app: Probot) => {
 
   // When an existing issue is commented on
   app.on("issue_comment.created", async (context) => {
-    // Exclude replies made by this bot
+    // Allow bot comments with appropriate params
+    if (context.payload.sender.login === "ai-hawk-birdwatcher[bot]"
+      && context.payload.issue.body
+      && context.payload.issue.body.includes("PRIMARY_LABEL: ")
+    ) {
+      return
+    }
+
+    // Exclude other replies made by this bot
     if (context.payload.sender.login === "ai-hawk-birdwatcher[bot]") {
       return
     }

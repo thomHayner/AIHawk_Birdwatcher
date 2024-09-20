@@ -1,3 +1,6 @@
+import { IssueContextObj } from "./aiObjectTyping.js";
+
+// Fetches a list of all Comments for an Issue
 export async function fetchMessages(context:any) {
   const response = await fetch(context.payload.issue.comments_url);
 
@@ -17,6 +20,7 @@ export async function fetchMessages(context:any) {
   return messages
 };
 
+// Fetches a File from a GitHub Repository 
 export async function fetchRepo(context:any) {
   const response = await fetch(context.payload.issue.repository_url);
 
@@ -34,3 +38,15 @@ export async function fetchRepo(context:any) {
 
   return repoInfo
 };
+
+// Applies a Label to an Issue
+export async function applyPrimaryLabel(primaryLabel: string, context:IssueContextObj) {
+  context.octokit.issues.addLabels(
+    context.issue({
+      issue_number: context.payload.issue.number,
+      // begin static testin
+      labels: [primaryLabel],
+      ///// end static testing
+    })
+  );
+}

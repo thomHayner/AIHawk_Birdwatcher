@@ -126,6 +126,8 @@ export async function primaryLabelCompletion(context:any, messageList:any) {
     // Then 
     params.messages.push(chatCompletion.choices[0].message);
     params.messages.push(function_call_result_message);
+
+    // TODO: make this look up the file
     params.messages.push({
       role: "user",
       content: `Use the following .yml template to generate an official report:\n

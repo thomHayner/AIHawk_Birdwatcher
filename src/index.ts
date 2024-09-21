@@ -1,6 +1,6 @@
 import { Probot } from "probot";
 import issueIntake from "./workflows/issueIntake.js";
-import issueCommentCreated from "./webhooks/issue_comments.js";
+import issueCommentCreated from "./workflows/issueWatcher.js";
 
 export default (app: Probot) => {
 
@@ -13,20 +13,15 @@ export default (app: Probot) => {
 
   /// When an existing issue is commented on
   app.on("issue_comment.created", async (context) => {
-    // Exclude replies made by this bot
-    if (context.payload.sender.login === "ai-hawk-birdwatcher[bot]") {
-      return
-    };
-
     // If the issue is still in 'Intake', go to the 'Issue Intake' workflow::
     if (context.payload.issue.labels.length > 0 && context.payload.issue.labels.map((n:any)=>n.name).includes("intake")) {
       const issueIntakeResponse = await issueIntake(context)
-      return await context.octokit.issues.createComment(issueIntakeResponse);
+      await context.octokit.issues.createComment(issueIntakeResponse);
+    } else {
+      // Otherwise, go to normal comment workflow:
+      const issueComment = await issueCommentCreated(context);
+      await context.octokit.issues.createComment(issueComment);
     };
-
-    // Otherwise, go to normal comment workflow:
-    const issueComment = await issueCommentCreated(context);
-    return await context.octokit.issues.createComment(issueComment);
   });
 
   // For more information on building apps:

@@ -72,7 +72,7 @@ export default async function issueCommentCreated(context: any): Promise<any> {
       content: 'reply with a copy of the template that I just provided in markdown format'
       // content: "Use the attached .yml template to write an official Issue Report based on the preceeding conversation. If you need more information to complete the form, ask follow up question; if you have all the necessary information, return the official Issue Report in markdown format.",
     })
-    aiResponseMessage = await issueCommentCompletion(context, messages, primaryLabel, template);
+    aiResponseMessage = await issueCommentCompletion(context, messages);
 
     // return the report
   } ;

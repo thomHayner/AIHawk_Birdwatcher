@@ -13,12 +13,18 @@ export default (app: Probot) => {
 
   /// When an existing issue is commented on
   app.on("issue_comment.created", async (context) => {
-    // If the issue is still in 'Intake', go to the 'Issue Intake' workflow::
-    if (context.payload.issue.labels.length > 0 && context.payload.issue.labels.map((n:any)=>n.name).includes("intake")) {
+    // If the comment was made by this bot, don't rely to self:
+    // TODO: make the bot name in next line dynamic
+    if (context.payload.sender.login === "ai-hawk-birdwatcher[bot]") {
+      return
+    }
+    // If the issue is still in 'Intake', go to the 'Issue Intake' workflow:
+    else if (context.payload.issue.labels.length > 0 && context.payload.issue.labels.map((n:any)=>n.name).includes("intake")) {
       const issueIntakeResponse = await issueIntake(context)
       await context.octokit.issues.createComment(issueIntakeResponse);
-    } else {
-      // Otherwise, go to normal comment workflow:
+    }
+    // Otherwise, go to normal comment workflow:
+    else {
       const issueComment = await issueCommentCreated(context);
       await context.octokit.issues.createComment(issueComment);
     };

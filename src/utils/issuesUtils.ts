@@ -1,4 +1,7 @@
-import { IssueContextObj } from "./aiObjectTyping.js";
+// The list of primaryLabels
+export const primaryLabelList = ["bug", "documentation", "enhancement", "question"];
+
+export const duplicateCheckedLabelList = ["duplicate", "unique"];
 
 // Fetches a list of all Comments for an Issue
 export async function fetchMessages(context:any) {
@@ -40,13 +43,19 @@ export async function fetchRepo(context:any) {
 };
 
 // Applies a Label to an Issue
-export async function applyPrimaryLabel(primaryLabel: string, context:IssueContextObj) {
+export async function addLabel(label: string, context:any) {
   context.octokit.issues.addLabels(
     context.issue({
-      issue_number: context.payload.issue.number,
-      // begin static testin
-      labels: [primaryLabel],
-      ///// end static testing
+      labels: [label],
+    })
+  );
+}
+
+// Removes a Label to an Issue
+export async function removeLabel(label: string, context:any) {
+  context.octokit.issues.removeLabel(
+    context.issue({
+      labels: [label],
     })
   );
 }

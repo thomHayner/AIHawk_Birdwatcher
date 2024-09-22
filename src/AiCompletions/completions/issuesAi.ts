@@ -11,7 +11,7 @@ import {
 
 const issuesAiClient = new OpenAi({ apiKey: process.env.OPENAI_API_KEY });
 
-const systemPrompt:string = `\
+export const systemPrompt:string = `\
   You are an intelligent Software Engineer working as a GitHub Repository Maintainer on an open source project.\n
   \n
   You are responsible for:\n
@@ -20,7 +20,7 @@ const systemPrompt:string = `\
   \n
   Only answer questions related to your role and it's responsibilities.\
 `
-const taskPrompt:string = `\
+export const taskPrompt:string = `\
   Your task involves the Issues feature, which GitHub describes in the following way: \
   "Issues integrate lightweight task tracking into your repository. \
   Keep projects on track with issue labels and milestones, and reference them in commit messages."\n

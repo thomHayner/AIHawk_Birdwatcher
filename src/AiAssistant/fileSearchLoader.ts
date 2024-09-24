@@ -1,19 +1,131 @@
-// Function to recursively get all files in the repository
-export async function getAllFiles(context:any, owner:string, repo:string, path:string = '') {
-  
-  const { data } = await context.octokit.repos.getContent({
-    owner: owner,
-    repo: repo,
-    path,
+import { octokit } from '../utils/octokit.js';
+import { openai } from '../utils/openai.js';
+import * as fs from 'node:fs';
+import * as fsp from 'node:fs/promises';
+import nodepath from 'node:path';
+import { vectorStoreId } from '../utils/vector-store-config.js';
+
+///// This still needs a helper to replace updated duplicate files on a push/pr (to main only)
+///// This still needs a checker to not upload duplicate files
+
+const supportedFileTypes:string[] = [".c", ".cpp", ".cs", ".css", ".doc", ".docx", ".go", ".html", ".java", ".js", ".json", ".md", ".pdf", ".php", ".pptx", ".py", ".rb", ".sh", ".tex", ".ts", ".txt"];
+
+export async function getAllRepoFiles():Promise<void> {
+
+  const files:any[] = await getRepoTreeRecursive();
+
+  await Promise.all(files.map(async (file): Promise<any> => {
+    await fileDecodeAndUpload(file);
+  }))
+}
+
+/* Helper functions */
+
+// Gets a list with info of all repo files
+async function getRepoTreeRecursive():Promise<any[]> {
+  const owner:string = process.env.OWNER ? process.env.OWNER : "";
+  const repo:string = process.env.REPO ? process.env.REPO : "";
+
+  // // get a list of all files in each directory (starting with root)
+  const { data }:any = await octokit.rest.git.getTree({
+    owner,
+    repo,
+    tree_sha: '74d7dd6e107e361ad18244d5b5daaeb7cb1ca9cd',
+    recursive: "1",
   });
 
-  let files:any[] = [];
-  for (const item of data) {
-    if (item.type === 'file') {
-      files.push(item);
-    } else if (item.type === 'dir') {
-      files = files.concat(await getAllFiles(context, owner, repo, item.path));
-    }
-  }
+  let files:any = await data.tree.filter((item:any) => item.type === 'blob');
+
   return files;
-};
+}
+
+// Gets the fileName using file.path
+async function fileNameIsolater(path:string):Promise<string> {
+  const lastIndex:number = path.lastIndexOf("/");
+  if (lastIndex === -1) {
+    return path; // no slash found, return entire path
+  };
+  const fileName:string =  path.slice(lastIndex + 1);
+  return fileName;
+}
+
+// Gets the fileType using file.path
+async function fileTypeIsolater(path:string):Promise<string> {
+  const lastIndex:number = path.lastIndexOf(".");
+  if (lastIndex === -1) {
+    return path; // no dot found, return entire path
+  };
+  const fileType:string =  path.slice(lastIndex);
+  return fileType;
+}
+
+// 1. Decodes a single files's content from Base64 to readable code / txt,
+// 2. Creates a local tempFile,
+// 3. Uploads the tempFile to an OpenAI Cloud Vector Store instance,
+// 4. Deletes the local tempFile.
+async function fileDecodeAndUpload(file:any):Promise<any> {
+  const owner:string = process.env.OWNER ? process.env.OWNER : "";
+  const repo:string = process.env.REPO ? process.env.REPO : "";
+
+  // skip if file is undefined
+  if (!file) {
+    return console.log('undefined file was skipped');
+  }
+
+  const fileName:string = await fileNameIsolater(file.path);
+
+  // TODO: convert license to .txt - it already is a plin text file but might need .txt filetype appended
+  // if (file.path === 'LICENSE') {
+  //   return console.log(`${file.path} was skipped because it is not supported in OpenAI Vector Stores`);
+  // }
+  if (file.path === 'LICENSE') {
+    file.path += ".txt"
+  }
+  
+  // TODO: convert gitignore to .txt - it already is a plin text file but might need .txt filetype appended
+  // if (file.path === '.gitignore') {
+  //   return console.log(`${file.path} was skipped because it is not supported in OpenAI Vector Stores`);
+  // }
+  if (file.path === '.gitignore') {
+    file.path += ".txt"
+  }
+  
+  // check for un-supported filetypes
+  const fileType:string = await fileTypeIsolater(file.path);
+  if (!supportedFileTypes.some(type => fileType === type)) {
+    return console.log(`${file.path} was skipped because ${fileType} files are not supported in OpenAI Vector Stores`);
+  }
+
+  const fileContent:any = await octokit.repos.getContent({
+    owner,
+    repo,
+    path: file.path,
+  });
+
+  // decode the file from base64 to readable code
+  const decodedContent:string = Buffer.from(fileContent.data.content, 'base64').toString('utf-8');
+  
+  // if it's a .yml or .yaml file, convert it (future)
+  // TODO: implement file converter to .txt or .json (.json preferred)
+
+  // save the file locally (temporarily)
+  const tempFilePath:string = nodepath.join('src', 'temp', fileName);
+  await fsp.writeFile(tempFilePath, decodedContent);
+
+  // upload the file to OpenAI
+  const openaiFile:any = await openai.files.create({
+    file: fs.createReadStream(tempFilePath),
+    purpose: 'assistants',
+  });
+
+  // add file to vector store
+  await openai.beta.vectorStores.files.create(vectorStoreId, {
+    file_id: openaiFile.id,
+  });
+  
+  // delete the temporary file
+  await fsp.unlink(tempFilePath);
+  
+  console.log(`Uploaded ${file.path} to OpenAI with file ID: ${openaiFile.id}`);
+  return new Response();
+}

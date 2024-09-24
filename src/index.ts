@@ -1,11 +1,11 @@
 import { Probot } from "probot";
 import issueIntake from "./AiCompletions/workflows/issueIntake.js";
 import issueCommentCreated from "./AiCompletions/workflows/issueWatcher.js";
-import { getAllRepoFiles } from "./AiAssistant/fileSearchLoader.js";
+import { uploadAllRepoFilesToOpenAi } from "./AiAssistant/fileSearchLoader.js";
 
 export default (app: Probot) => {
 
-  // getAllRepoFiles();
+  uploadAllRepoFilesToOpenAi();
 
   /* 
   *  The first order of business will be to setup and configure the OpenAI Assistant and Vector Store
@@ -51,7 +51,7 @@ export default (app: Probot) => {
   });
 
   app.on('push', async (context) => {
-    getAllRepoFiles();
+    uploadAllRepoFilesToOpenAi();
   });
 
   // For more information on building apps:

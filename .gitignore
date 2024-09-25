@@ -12,3 +12,4 @@ lib
 
 #VS Code
 .code-workspace
+src/AIHawk_Birdwatcher.code-workspace

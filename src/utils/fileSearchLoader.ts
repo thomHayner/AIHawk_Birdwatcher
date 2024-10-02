@@ -1,9 +1,9 @@
-import { octokit } from "../utils/octokit.js";
-import { openai } from "../utils/openai.js";
+import { octokit } from "./clients/octokit.js";
+import { openai } from "./clients/openai.js";
 import * as fs from "node:fs";
 import * as fsp from "node:fs/promises";
 import nodepath from "node:path";
-import { vectorStoreId } from "../utils/vector-store-config.js";
+import { vectorStoreId } from "./clients/vector-store-config.js";
 
 ///// This still needs a helper to replace updated duplicate files on a push/pr (to main only)
 ///// This still needs a checker to not upload duplicate files

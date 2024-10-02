@@ -1,4 +1,4 @@
-import { openai } from "../clients/openai.js";
+import { openai } from "./openai.js";
 
 const assistantName:string = 'GitHub Repo Maintainer';
 

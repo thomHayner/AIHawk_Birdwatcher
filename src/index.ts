@@ -6,7 +6,6 @@ import { uploadAllRepoFilesToOpenAi } from "./AiAssistant/fileSearchLoader.js";
 export default (app: Probot) => {
 
   uploadAllRepoFilesToOpenAi();
-
   /* 
   *  The first order of business will be to setup and configure the OpenAI Assistant and Vector Store
   *   1. Assistant
@@ -50,7 +49,7 @@ export default (app: Probot) => {
     };
   });
 
-  app.on('push', async (context) => {
+  app.on('push', async () => {
     uploadAllRepoFilesToOpenAi();
   });
 

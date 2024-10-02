@@ -1,4 +1,4 @@
-# LinkedIn_AIHawk_Birdwatcher
+# AIHawk_Birdwatcher
 
 > A GitHub App built with [Probot](https://github.com/probot/probot) and integrated with [OpenAI](https://platform.openai.com).  An intelligent GitHub Repository Maintainer Agent for: triaging Issues, reviewing Pull Requests, and moderating Discussions; can be trained on a repository Wiki as well for FAQ and troubleshooting, backwards compatible for existing repositories with issues, pr and discussions histories.
 

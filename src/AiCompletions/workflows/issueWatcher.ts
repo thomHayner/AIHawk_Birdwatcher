@@ -47,7 +47,7 @@ export default async function issueCommentCreated(context: any): Promise<any> {
 
       const data = await response.json();
       const repoInfo = {
-        name: "LinkedIn_AIHawk_Birdwatcher", // await data.name,
+        name: "AIHawk_Birdwatcher", // await data.name,
         owner: "thomHayner", // await data.owner,
         path: ".github/UserNoAiYesTemplates/ISSUE_TEMPLATE/bug-issue.yml"
       }

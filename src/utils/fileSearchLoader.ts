@@ -3,14 +3,16 @@ import { openai } from "./clients/openai.js";
 import * as fs from "node:fs";
 import * as fsp from "node:fs/promises";
 import nodepath from "node:path";
-import { vectorStoreId } from "./clients/vector-store-config.js";
+import findOrCreateVectorStore from "./clients/vectorStoreConfig.js";
 
 ///// This still needs a helper to replace updated duplicate files on a push/pr (to main only)
 ///// This still needs a checker to not upload duplicate files
 
 const supportedFileTypes:string[] = [".c", ".cpp", ".cs", ".css", ".doc", ".docx", ".go", ".html", ".java", ".js", ".json", ".md", ".pdf", ".php", ".pptx", ".py", ".rb", ".sh", ".tex", ".ts", ".txt"];
 
-export async function uploadAllRepoFilesToOpenAi():Promise<void> {
+const vectorStoreId:string = await findOrCreateVectorStore();
+
+export default async function uploadAllRepoFilesToOpenAi():Promise<void> {
 
   const files:any[] = await getRepoTreeRecursive();
 

@@ -68,38 +68,38 @@ export default async function initializeAssistant() {
   *  5. Update assistant with custom functions
   */
 
-  const customFunctions = [
-    {
-      type: "function",
-      function: {
-        name: "add_label_to_issue",
-        description: "Add a label to a GitHub issue",
-        parameters: {
-          type: "object",
-          properties: {
-            issue_number: { type: "integer" },
-            label: { type: "string" },
-          },
-          required: ["issue_number", "label"],
-        },
-      },
-    },
-    {
-      type: "function",
-      function: {
-        name: "remove_label_from_issue",
-        description: "Remove a label from a GitHub issue",
-        parameters: {
-          type: "object",
-          properties: {
-            issue_number: { type: "integer" },
-            label: { type: "string" },
-          },
-          required: ["issue_number", "label"],
-        },
-      },
-    },
-  ];
+  // const customFunctions = [
+  //   {
+  //     type: "function",
+  //     function: {
+  //       name: "add_label_to_issue",
+  //       description: "Add a label to a GitHub issue",
+  //       parameters: {
+  //         type: "object",
+  //         properties: {
+  //           issue_number: { type: "integer" },
+  //           label: { type: "string" },
+  //         },
+  //         required: ["issue_number", "label"],
+  //       },
+  //     },
+  //   },
+  //   {
+  //     type: "function",
+  //     function: {
+  //       name: "remove_label_from_issue",
+  //       description: "Remove a label from a GitHub issue",
+  //       parameters: {
+  //         type: "object",
+  //         properties: {
+  //           issue_number: { type: "integer" },
+  //           label: { type: "string" },
+  //         },
+  //         required: ["issue_number", "label"],
+  //       },
+  //     },
+  //   },
+  // ];
 
   // await openai.beta.assistants.update(assistant.id, {
   //   tools: [...assistant.tools, ...customFunctions],

@@ -5,13 +5,12 @@ import { z } from "zod";
 import { zodFunction } from "openai/helpers/zod";
 import {
   primaryLabelList,
-  addLabel,
-  fetchRepo as fetchTemplate
+  addLabel
 } from '../utils/issuesUtils.js';
 
 const issuesAiClient = new OpenAi({ apiKey: process.env.OPENAI_API_KEY });
 
-export const systemPrompt:string = `\
+export const assistantSystemPrompt:string = `\
   You are an intelligent Software Engineer working as a GitHub Repository Maintainer on an open source project.\n
   \n
   You are responsible for:\n
@@ -90,7 +89,7 @@ export async function primaryLabelCompletion(context:any, messageList:any) {
     messages: [
       {
         role: 'system',
-        content: systemPrompt,
+        content: assistantSystemPrompt,
       },
       {
         role: 'user',
@@ -238,13 +237,13 @@ export async function primaryLabelCompletion(context:any, messageList:any) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export async function issueReportCompletion(context:any | any, messages:any, primaryLabel?:string, template?:any) {
+export async function issueReportCompletion(context:any | any, messages:any, /* primaryLabel?:string, template?:any */) {
   const issue = context.payload.issue;
   const params:OpenAI.Chat.ChatCompletionCreateParams = {
     messages: [
       {
         role: 'system',
-        content: systemPrompt,
+        content: assistantSystemPrompt,
       },
       {
         role: 'user',
@@ -274,7 +273,7 @@ export async function issueDuplicateCheckCompletion(context:any | any, messages:
     messages: [
       {
         role: 'system',
-        content: systemPrompt,
+        content: assistantSystemPrompt,
       },
       {
         role: 'user',
@@ -304,7 +303,7 @@ export async function issueCommentCompletion(context:any | any, messages:any) {
     messages: [
       {
         role: 'system',
-        content: systemPrompt,
+        content: assistantSystemPrompt,
       },
       {
         role: 'user',

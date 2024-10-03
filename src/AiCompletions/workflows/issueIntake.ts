@@ -1,6 +1,5 @@
 import {
   primaryLabelCompletion,
-  issueCommentCompletion,
   issueDuplicateCheckCompletion,
   issueReportCompletion
 } from "../completions/issuesAi.js";

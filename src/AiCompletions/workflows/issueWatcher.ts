@@ -45,7 +45,7 @@ export default async function issueCommentCreated(context: any): Promise<any> {
         throw new Error(errorMessage);
       }
 
-      const data = await response.json();
+      // const data = await response.json();
       const repoInfo = {
         name: "AIHawk_Birdwatcher", // await data.name,
         owner: "thomHayner", // await data.owner,
@@ -58,13 +58,13 @@ export default async function issueCommentCreated(context: any): Promise<any> {
       error.errorMessage;
     });
 
-    const repoInfo = await fetchRepo();
-    const owner = await repoInfo.owner;
-    const name = await repoInfo.name;
-    const path = await repoInfo.path;
+    // const repoInfo = await fetchRepo();
+    // const owner = await repoInfo.owner;
+    // const name = await repoInfo.name;
+    // const path = await repoInfo.path;
 
     /// Have octokit grab the corresponding .yml template
-    const template = await context.octokit.rest.repos.getContent({ owner, name, path });
+    // const template = await context.octokit.rest.repos.getContent({ owner, name, path });
 
     // add on a message telling gpt to use the template to make a report
     messages.push({

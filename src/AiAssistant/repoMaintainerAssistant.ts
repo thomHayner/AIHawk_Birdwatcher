@@ -1,24 +1,20 @@
 import { openai } from "../utils/clients/openai.js";
-import { octokit } from "../utils/clients/octokit.js";
 import * as fs from 'node:fs';
-
-
-import { assistantModel, assistantName, systemPrompt } from "../utils/clients/assistantConfig.js";
+import { assistantModel, assistantName, assistantSystemPrompt } from "../utils/clients/assistantConfig.js";
 import uploadAllRepoFilesToOpenAi from "../utils/fileSearchLoader.js";
 
 export async function assistant() {
   // Create the assistant
   const assistant = await openai.beta.assistants.create({
     name: assistantName,
-    instructions: systemPrompt,
+    instructions: assistantSystemPrompt,
     tools: [{ type: "code_interpreter" }, {"type": "file_search"}],
     model: assistantModel
   });
 
-  
-  const uploadFiles = await uploadAllRepoFilesToOpenAi()
+  // const uploadFiles = await uploadAllRepoFilesToOpenAi();
+  await uploadAllRepoFilesToOpenAi()
 
-  
   // Create a filestream
   const fileStreams = ["https://raw.githubusercontent.com/thomHayner/AI_Hawk/main/src/job.py", "https://raw.githubusercontent.com/thomHayner/AI_Hawk/main/src/gpt.py"].map((path) =>
     fs.createReadStream(path),

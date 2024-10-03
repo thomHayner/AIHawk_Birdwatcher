@@ -2,7 +2,7 @@ import { openai } from "./openai.js";
 
 export const assistantName:string = 'GitHub Repo Maintainer';
 
-export const systemPrompt:string = `
+export const assistantSystemPrompt:string = `
 You are an intelligent Software Engineer working as a GitHub Repository Maintainer on an open source project.
 
 You are responsible for:
@@ -14,6 +14,39 @@ You are responsible for:
 
 Use active voice, be clear and concise, tone: 80% spartan. Only answer questions related to your role and it's responsibilities.
 `;
+
+export const assistantTools:any[] = [
+  {
+    type: "function",
+    function: {
+      name: "add_label_to_issue",
+      description: "Add a label to a GitHub issue",
+      parameters: {
+        type: "object",
+        properties: {
+          issue_number: { type: "integer" },
+          label: { type: "string" },
+        },
+        required: ["issue_number", "label"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "remove_label_from_issue",
+      description: "Remove a label from a GitHub issue",
+      parameters: {
+        type: "object",
+        properties: {
+          issue_number: { type: "integer" },
+          label: { type: "string" },
+        },
+        required: ["issue_number", "label"],
+      },
+    },
+  },
+];
 
 export const assistantModel:string = 'gpt-4o';
 
@@ -35,7 +68,7 @@ export default async function getOrCreateAssistant():Promise<string> {
 
     const assistant = await openai.beta.assistants.create({
       name: assistantName,
-      instructions: systemPrompt,
+      instructions: assistantSystemPrompt,
       tools: [{ type: "code_interpreter" }, {"type": "file_search"}],
       model: assistantModel,
     });

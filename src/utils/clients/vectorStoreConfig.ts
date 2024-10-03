@@ -1,7 +1,8 @@
 import { openai } from "./openai.js";
 
-let vectorStoreId:string|undefined = process.env.OPENAI_VECTOR_STORE_ID; // set your vector store ID here
+export const vectorStoreName:string = "Repository Vector Store";
 
+let vectorStoreId:string|undefined = process.env.OPENAI_VECTOR_STORE_ID; // set your vector store ID here
 
 export default async function getOrCreateVectorStore():Promise<string> {
   if (vectorStoreId && vectorStoreId !== "") {
@@ -18,7 +19,7 @@ export default async function getOrCreateVectorStore():Promise<string> {
     // } else if (askQuestion === "y" || askQuestion === "yes" || askQuestion === "Y" || askQuestion === "Yes" || askQuestion === "YES") {}
   
     const vectorStore = await openai.beta.vectorStores.create({
-      name: "Repository Vector Store"
+      name: vectorStoreName,
     });
 
     // As well as the value to be returned

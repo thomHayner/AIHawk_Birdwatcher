@@ -32,7 +32,7 @@ export async function fetchRepo(context:any) {
     throw new Error(errorMessage);
   }
 
-  const data = await response.json();
+  // const data = await response.json();
   const repoInfo = {
     name: "AIHawk_Birdwatcher", // await data.name,
     owner: "thomHayner", // await data.owner,

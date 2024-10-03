@@ -1,10 +1,10 @@
 import { openai } from "../../utils/clients/openai.js";
-import { assistantModel, assistantName, systemPrompt } from "../../utils/clients/assistantConfig.js";
+import { assistantModel, assistantName, assistantSystemPrompt } from "../../utils/clients/assistantConfig.js";
 
 // Create a new assistant
 export async function POST() {
   const assistant = await openai.beta.assistants.create({
-    instructions: systemPrompt,
+    instructions: assistantSystemPrompt,
     name: assistantName,
     model: assistantModel,
     tools: [

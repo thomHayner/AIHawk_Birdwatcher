@@ -1,4 +1,4 @@
-import { openai } from "@/app/openai";
+import { openai } from "../../../utils/clients/openai.js";
 
 // Create a new thread
 export async function POST() {

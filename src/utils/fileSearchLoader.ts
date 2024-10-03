@@ -37,7 +37,6 @@ const vectorStoreId:string = await findOrCreateVectorStore();
 export default async function uploadAllRepoFilesToOpenAi():Promise<void> {
   const repoFiles:RepoFile[] = await getRepoTreeRecursive(); // console.log("repo file list: ", repoFiles);
   const vectorStoreFileList: VectorStoreFile[] = await getVectorFileList();
-  console.log("vector file list: ", vectorStoreFileList);
 
   await Promise.all(repoFiles.map(async (file):Promise<any> => {
     const duplicate = await checkForDuplicateFile(vectorStoreFileList, file);

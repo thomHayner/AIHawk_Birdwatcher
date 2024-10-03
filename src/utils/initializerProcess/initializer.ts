@@ -110,6 +110,6 @@ export default async function initializeAssistant() {
   *  6. Assistant is now ready for event-based actions
   */
 
-  console.log("Initialization complete. Assistant is ready for event-based actions.");
+  console.log("INITIALIZER: Initialization complete. Assistant is ready for event-based actions.");
   return;
 }

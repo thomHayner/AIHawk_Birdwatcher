@@ -13,7 +13,7 @@ export default (app: Probot) => {
   *  The first order of business will be to setup and configure the OpenAI Assistant and Vector Store
   *  
   */
- (async () =>  await initializer())();
+  (async () =>  await initializer())();
   // (async () =>  {
   //   await deleteAllOpenAiFiles();
   //   await removeAllTempFiles();

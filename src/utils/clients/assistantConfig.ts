@@ -1,8 +1,8 @@
 import { openai } from "./openai.js";
 
-const assistantName:string = 'GitHub Repo Maintainer';
+export const assistantName:string = 'GitHub Repo Maintainer';
 
-const systemPrompt:string = `
+export const systemPrompt:string = `
 You are an intelligent Software Engineer working as a GitHub Repository Maintainer on an open source project.
 
 You are responsible for:
@@ -15,7 +15,7 @@ You are responsible for:
 Use active voice, be clear and concise, tone: 80% spartan. Only answer questions related to your role and it's responsibilities.
 `;
 
-const assistantModel:string = 'gpt-4o';
+export const assistantModel:string = 'gpt-4o';
 
 let assistantId:string|undefined = process.env.OPENAI_ASSISTANT_ID; // set your assistant ID here
 

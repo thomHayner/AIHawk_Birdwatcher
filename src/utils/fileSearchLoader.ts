@@ -131,18 +131,21 @@ async function fileDecodeAndUpload(file:RepoFile):Promise<Response> {
 
   // skip if file is undefined
   if (!file) {
-    return console.log("undefined file was skipped");
+    // console.log("undefined file was skipped");
+    return new Response("undefined file was skipped", { status: 400 });
   }
 
   // skip if file is empty
   if (file.size === 0) {
-    return console.log(`${file.path} was skipped because the file size is 0`);
+    // console.log(`${file.path} was skipped because the file size is 0`);
+    return new Response(`${file.path} was skipped because the file size is 0`, { status: 400 });
   }
   
   // skip if filetype is not supported by OpenAI
   const fileType:string = await fileTypeIsolater(file.path);
   if (!supportedTypes.some(type => fileType === type.ext)) {
-    return console.log(`${file.path} was skipped because ${fileType} files are not supported in OpenAI Vector Stores`);
+    // console.log(`${file.path} was skipped because ${fileType} files are not supported in OpenAI Vector Stores`);
+    return new Response(`${file.path} was skipped because ${fileType} files are not supported in OpenAI Vector Stores`, { status: 400 });
   }
 
   const fileName:string = await fileNameIsolater(file.path);
@@ -158,7 +161,8 @@ async function fileDecodeAndUpload(file:RepoFile):Promise<Response> {
   
   // skip if file is empty
   if (decodedContent.length === 0) {
-    return console.log(`${file.path} was skipped because the file is empty`);
+    // console.log(`${file.path} was skipped because the file is empty`);
+    return new Response(`${file.path} was skipped because the file is empty`, { status: 400 });
   }
   
     // TODO: convert license to .txt - it already is a plin text file but might need .txt filetype appended

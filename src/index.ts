@@ -10,7 +10,7 @@ export default (app: Probot) => {
   *  The first order of business will be to setup and configure the OpenAI Assistant and Vector Store
   *  
   */
-  async () =>  await initializer();
+  (async () =>  await initializer())();
 
   // When a new issue is opened:
   app.on("issues.opened", async (context) => {

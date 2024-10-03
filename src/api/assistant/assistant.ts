@@ -1,5 +1,5 @@
-import { openai } from "../../utils/openai.js";
-import { assistantModel, assistantName, systemPrompt } from "../../utils/assistant-config.js";
+import { openai } from "../../utils/clients/openai.js";
+import { assistantModel, assistantName, systemPrompt } from "../../utils/clients/assistantConfig.js";
 
 // Create a new assistant
 export async function POST() {

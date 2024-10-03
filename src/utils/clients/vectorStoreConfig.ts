@@ -3,7 +3,7 @@ import { openai } from "./openai.js";
 let vectorStoreId:string|undefined = process.env.OPENAI_VECTOR_STORE_ID; // set your vector store ID here
 
 
-export default async function findOrCreateVectorStore():Promise<string> {
+export default async function getOrCreateVectorStore():Promise<string> {
   if (vectorStoreId && vectorStoreId !== "") {
     // Use the provided vectorStoreId
     console.log("vectorStoreId:", vectorStoreId);
@@ -25,6 +25,7 @@ export default async function findOrCreateVectorStore():Promise<string> {
     // As well as the value to be returned
     vectorStoreId = vectorStore.id
     // Then set the value for the OPENAI_VECTOR_STORE_ID key in the .env file
+    // TODO: this should use node:fs (and dotenv? or no due to node v20+) to write to the .env file
     process.env.OPENAI_VECTOR_STORE_ID = vectorStoreId;
 
     console.log("Vector Store created.");

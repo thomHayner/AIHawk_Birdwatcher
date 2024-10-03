@@ -19,7 +19,7 @@ const assistantModel:string = 'gpt-4o';
 
 let assistantId:string|undefined = process.env.OPENAI_ASSISTANT_ID; // set your assistant ID here
 
-export default async function findOrCreateAssistant():Promise<string> {
+export default async function getOrCreateAssistant():Promise<string> {
   if (assistantId && assistantId !== "") {
     // Use the provided assistantId
     console.log("assistantId:", assistantId);
@@ -44,6 +44,7 @@ export default async function findOrCreateAssistant():Promise<string> {
     // As well as the value to be returned
     assistantId = assistant.id
     // Then set the value for the OPENAI_ASSISTANT_ID key in the .env file
+    // TODO: this should use node:fs (and dotenv? or no due to node v20+) to write to the .env file
     process.env.OPENAI_ASSISTANT_ID = assistantId;
 
     console.log("Assistant created.");

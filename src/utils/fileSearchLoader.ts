@@ -35,6 +35,7 @@ const supportedTypes:SupportedType[] = [{ext: ".c",	mime: "text/x-c"},{ext: ".cp
 const vectorStoreId:string = await findOrCreateVectorStore();
 
 export default async function uploadAllRepoFilesToOpenAi():Promise<void> {
+  // TODO: Check for { status: 'failed' } files.  If found, delete and retry upload.
   const repoFiles:RepoFile[] = await getRepoTreeRecursive(); // console.log("repo file list: ", repoFiles);
   const vectorStoreFileList: VectorStoreFile[] = await getVectorFileList();
 

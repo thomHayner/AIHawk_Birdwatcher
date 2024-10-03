@@ -31,19 +31,18 @@ export default async function initializeAssistant() {
   console.log("vectorStoreId:", vectorStoreId);
 
   /*
-  *  - Download the entire Git Repository from GitHub
-  *  - Upload the Git Repository files to the Vector Store
+  *    - Download the entire Git Repository from GitHub
+  *    - Upload the Git Repository files to the Vector Store
   */
 
   await uploadAllRepoFilesToOpenAi();
   console.log("All files matching OpenAI Supported Filetypes have been Uploaded");
-  
+
   const fileIds = await getVectorFileList();
   console.log("fileIds:", fileIds);
 
   /*
-  *  
-  *  - Train the Assistant on the Vector Store
+  *    - Train the Assistant on the Vector Store
   *  3. Training and Code Interpreter
   *  - Train the AI on the .github foler (README, CODE_OF_CONDUCT, CONTRIBUTING, CODEOWNERS, ISSUES_TEMPLATES,
   *    DISCUSSION_TEMPLATES), as well as the LICENSE, package.json, any [config].yml files for the repo/app,
@@ -53,10 +52,9 @@ export default async function initializeAssistant() {
 
 
   /* 
-  *  
   *  4. Update assistant with code_interpreter for key files
-  *  
-  */ 
+  */
+
   // const readmeFile = fileIds.find(file => file.name.toLowerCase() === 'readme.md');
   // if (readmeFile) {
   //   assistant = await openai.beta.assistants.update(assistant.id, {
@@ -65,7 +63,10 @@ export default async function initializeAssistant() {
   //   console.log("Assistant updated with code_interpreter feature");
   // }
 
-  // 5. Update assistant with custom functions
+  /* 
+  *  5. Update assistant with custom functions
+  */
+
   const customFunctions = [
     {
       type: "function",
@@ -105,8 +106,10 @@ export default async function initializeAssistant() {
 
   // console.log("Assistant updated with custom functions");
 
-  // 6. Assistant is now ready for event-based actions
-  console.log("Initialization complete. Assistant is ready for event-based actions.");
+  /* 
+  *  6. Assistant is now ready for event-based actions
+  */
 
-  // return;
+  console.log("Initialization complete. Assistant is ready for event-based actions.");
+  return;
 }

@@ -12,7 +12,7 @@ import { OctokitResponse } from "@octokit/types";
 type SupportedType = {
   ext:string;
   mime:string;
-}
+};
 
 type RepoFile = {
   path: string;
@@ -21,13 +21,13 @@ type RepoFile = {
   sha: string;
   size: number;
   url: string;
-}
+};
 
 type VectorStoreFile = {
   file_id: string;
   filename: string;
   status: string;
-}
+};
 
 // const supportedFileTypes:string[] = [".c", ".cpp", ".cs", ".css", ".doc", ".docx", ".go", ".html", ".java", ".js", ".json", ".md", ".pdf", ".php", ".pptx", ".py", ".rb", ".sh", ".tex", ".ts", ".txt"];
 const supportedTypes:SupportedType[] = [{ext: ".c",	mime: "text/x-c"},{ext: ".cpp",	mime: "text/x-c++"},{ext: ".cs",	mime: "text/x-csharp"},{ext: ".css",	mime: "text/css"},{ext: ".doc",	mime: "application/msword"},{ext: ".docx",	mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},{ext: ".go",	mime: "text/x-golang"},{ext: ".html",	mime: "text/html"},{ext: ".java",	mime: "text/x-java"},{ext: ".js",	mime: "text/javascript"},{ext: ".json",	mime: "application/json"},{ext: ".md",	mime: "text/markdown"},{ext: ".pdf",	mime: "application/pdf"},{ext: ".php",	mime: "text/x-php"},{ext: ".pptx",	mime: "application/vnd.openxmlformats-officedocument.presentationml.presentation"},{ext: ".py",	mime: "text/x-python"},{ext: ".py",	mime: "text/x-script.python"},{ext: ".rb",	mime: "text/x-ruby"},{ext: ".sh",	mime: "application/x-sh"},{ext: ".tex",	mime: "text/x-tex"},{ext: ".ts",	mime: "application/typescript"},{ext: ".txt",	mime: "text/plain"}];

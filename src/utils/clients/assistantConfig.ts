@@ -48,6 +48,5 @@ export default async function getOrCreateAssistant():Promise<string> {
 
     console.log("Assistant created.");
   }
-  console.log("assistantId:", assistantId);
   return assistantId;
 }

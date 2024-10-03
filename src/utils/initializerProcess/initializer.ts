@@ -19,6 +19,7 @@ export default async function initializeAssistant() {
   */
 
   const assistantId = await getOrCreateAgent();
+  console.log("assistantId:", assistantId);
 
   /*
   *  2. Vector Store
@@ -27,6 +28,7 @@ export default async function initializeAssistant() {
   */
 
   const vectorStoreId = await getOrCreateVectorStore();
+  console.log("vectorStoreId:", vectorStoreId);
 
   /*
   *  - Download the entire Git Repository from GitHub
@@ -35,6 +37,7 @@ export default async function initializeAssistant() {
 
   await uploadAllRepoFilesToOpenAi();
   console.log("All files matching OpenAI Supported Filetypes have been Uploaded");
+  
   const fileIds = await getVectorFileList();
   console.log("fileIds:", fileIds);
 

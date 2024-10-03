@@ -29,6 +29,5 @@ export default async function getOrCreateVectorStore():Promise<string> {
 
     console.log("Vector Store created.");
   }
-  console.log("vectorStoreId:", vectorStoreId);
   return vectorStoreId;
 }

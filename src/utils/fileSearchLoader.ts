@@ -137,6 +137,10 @@ async function fileDecodeAndUpload(file:any):Promise<any> {
   //   tempFilePath = nodepath.join("src", "temp", fileName);
   //   await fsp.writeFile(tempFilePath, decodedContent);
   // }
+  if (decodedContent.length === 0) {
+    return console.log(`${file.path} was skipped because it is empty`);
+  }
+
   const tempFilePath:string = nodepath.join("src", "temp", fileName);
   await fsp.writeFile(tempFilePath, decodedContent);
 

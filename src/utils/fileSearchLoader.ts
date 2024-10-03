@@ -4,20 +4,30 @@ import * as fs from "node:fs";
 import * as fsp from "node:fs/promises";
 import nodepath from "node:path";
 import findOrCreateVectorStore from "./clients/vectorStoreConfig.js";
+import { GET as getFileList, POST as addFileToVectorStore } from "../api/assistant/file_search/vector_store.js";
 
 ///// This still needs a helper to replace updated duplicate files on a push/pr (to main only)
-///// This still needs a checker to not upload duplicate files
 
 const supportedFileTypes:string[] = [".c", ".cpp", ".cs", ".css", ".doc", ".docx", ".go", ".html", ".java", ".js", ".json", ".md", ".pdf", ".php", ".pptx", ".py", ".rb", ".sh", ".tex", ".ts", ".txt"];
 
 const vectorStoreId:string = await findOrCreateVectorStore();
 
 export default async function uploadAllRepoFilesToOpenAi():Promise<void> {
+  const repoFiles:any[] = await getRepoTreeRecursive(); // console.log("repo file list: ", repoFiles);
+  const vectorStoreFileList = await getFileList(); // console.log("vector file list: ", vectorStoreFileList);
 
-  const files:any[] = await getRepoTreeRecursive();
-
+  await Promise.all(repoFiles.map(async (file):Promise<any> => {
+    const duplicate = await checkForDuplicateFile(vectorStoreFileList, file);
+    if (duplicate) {
+      return;
+    } else {
+      await fileDecodeAndUpload(file);
+    }
+  }))
+  console.log("All files matching OpenAI Supported Filetypes have been uploaded")
   await Promise.all(files.map(async (file): Promise<any> => {
     await fileDecodeAndUpload(file);
+
   }))
   console.log("All files matching OpenAI Supported Filetypes have been Uploaded")
 }

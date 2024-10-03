@@ -22,7 +22,6 @@ let assistantId:string|undefined = process.env.OPENAI_ASSISTANT_ID; // set your 
 export default async function getOrCreateAssistant():Promise<string> {
   if (assistantId && assistantId !== "") {
     // Use the provided assistantId
-    console.log("assistantId:", assistantId);
   } else if (assistantId === undefined || assistantId === "") {
     // Shell prompt at runtime asking user if they want to add an existing assistantId or create a new Assistant
     // TODO: develop shell script for asking question
@@ -48,7 +47,7 @@ export default async function getOrCreateAssistant():Promise<string> {
     process.env.OPENAI_ASSISTANT_ID = assistantId;
 
     console.log("Assistant created.");
-    console.log("assistantId:", assistantId);
   }
+  console.log("assistantId:", assistantId);
   return assistantId;
 }

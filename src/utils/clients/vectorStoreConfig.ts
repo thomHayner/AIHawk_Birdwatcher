@@ -6,7 +6,6 @@ let vectorStoreId:string|undefined = process.env.OPENAI_VECTOR_STORE_ID; // set 
 export default async function getOrCreateVectorStore():Promise<string> {
   if (vectorStoreId && vectorStoreId !== "") {
     // Use the provided vectorStoreId
-    console.log("vectorStoreId:", vectorStoreId);
   } else if (vectorStoreId === undefined || vectorStoreId === "") {
     // Shell prompt at runtime asking user if they want to add an existing vectorStoreId or create a new Vector Store
     // TODO: develop shell script for asking question
@@ -23,13 +22,13 @@ export default async function getOrCreateVectorStore():Promise<string> {
     });
 
     // As well as the value to be returned
-    vectorStoreId = vectorStore.id
+    vectorStoreId = vectorStore.id;
     // Then set the value for the OPENAI_VECTOR_STORE_ID key in the .env file
     // TODO: this should use node:fs (and dotenv? or no due to node v20+) to write to the .env file
     process.env.OPENAI_VECTOR_STORE_ID = vectorStoreId;
 
     console.log("Vector Store created.");
-    console.log("vectorStoreId:", vectorStoreId);
   }
+  console.log("vectorStoreId:", vectorStoreId);
   return vectorStoreId;
 }

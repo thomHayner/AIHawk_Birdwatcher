@@ -79,9 +79,9 @@ async function checkForDuplicateFile(vectorStoreFileList:VectorStoreFile[], file
 }
 
 // Gets a list with info of any repo files updated in a Pull Request
-async function getPullRequestFiles():Promise<RepoFile[]> {
-  return [];
-}
+// async function getPullRequestFiles():Promise<RepoFile[]> {
+//   return [];
+// }
 
 // Gets a list with info of all repo files
 async function getRepoTreeRecursive():Promise<RepoFile[]> {

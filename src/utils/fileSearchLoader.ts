@@ -39,16 +39,30 @@ export default async function uploadAllRepoFilesToOpenAi():Promise<void> {
   const repoFiles:RepoFile[] = await getRepoTreeRecursive(); // console.log("repo file list: ", repoFiles);
   const vectorStoreFileList: VectorStoreFile[] = await getVectorFileList();
 
-  await Promise.all(repoFiles.map(async (file):Promise<any> => {
-    const duplicate = await checkForDuplicateFile(vectorStoreFileList, file);
-    if (duplicate) {
-      console.log(`${file.path} was skipped because it is already in the Vector Store`);
-      return;
-    } else {
-      await fileDecodeAndUpload(file);
+  // await Promise.all(repoFiles.map(async (file):Promise<any> => {
+  //   const duplicate = await checkForDuplicateFile(vectorStoreFileList, file);
+  //   if (duplicate) {
+  //     console.log(`${file.path} was skipped because it is already in the Vector Store`);
+  //     return;
+  //   } else {
+  //     await fileDecodeAndUpload(file);
+  //   }
+  // }))
+  
+  for (const file of repoFiles) {
+    try {
+      const duplicate = await checkForDuplicateFile(vectorStoreFileList, file);
+      if (duplicate) {
+        console.log(`${file.path} was skipped because it is already in the Vector Store`);
+      } else {
+        await fileDecodeAndUpload(file);
+        console.log(`Successfully processed and uploaded ${file.path}`);
+      }
+    } catch (error) {
+      console.error(`Error processing file ${file.path}:`, error);
     }
-  }))
-  console.log("All files matching OpenAI Supported Filetypes have been uploaded")
+  }
+  console.log("All files matching OpenAI Supported Filetypes have been uploaded");
 }
 
 export async function updateRepoFilesToOpenAiOnPush(pullRequestFiles:RepoFile[]):Promise<void> {

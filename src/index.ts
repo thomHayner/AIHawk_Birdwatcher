@@ -1,10 +1,10 @@
 import { Probot } from "probot";
 import initializer from "./utils/initializerProcess/initializer.js";
+import { removeAllTempFiles } from "./AiApi/files/testingFilesManagement.js";
 import issueIntake from "./AiCompletions/workflows/issueIntake.js";
 import issueCommentCreated from "./AiCompletions/workflows/issueWatcher.js";
 import uploadAllRepoFilesToOpenAi from "./utils/fileSearchLoader.js";
-import { deleteAllOpenAiFiles } from "./AiApi/files/testingFilesManagement.js";
-import { removeAllTempFiles } from "./AiApi/files/testingFilesManagement.js";
+// import { deleteAllOpenAiFiles } from "./AiApi/files/testingFilesManagement.js";
 
 
 export default (app: Probot) => {
@@ -13,7 +13,11 @@ export default (app: Probot) => {
   *  The first order of business will be to setup and configure the OpenAI Assistant and Vector Store
   *  
   */
-  (async () =>  await initializer())();
+  (async () =>  {
+    await initializer();
+    await removeAllTempFiles();
+  })();
+  // The following is a cleanup script to delete all Local temp-files and all OpenAI files
   // (async () =>  {
   //   await deleteAllOpenAiFiles();
   //   await removeAllTempFiles();

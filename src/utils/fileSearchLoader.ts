@@ -24,6 +24,16 @@ export default async function uploadAllRepoFilesToOpenAi():Promise<void> {
 
 /* Helper functions */
 
+// Check to see if the file is already in the Vector Store
+async function checkForDuplicateFile(vectorStoreFileList:any[], fileToAdd:any):Promise<any> {
+  if (vectorStoreFileList.includes(fileToAdd)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
 // Gets a list with info of all repo files
 async function getRepoTreeRecursive():Promise<any[]> {
   const owner:string = process.env.OWNER ? process.env.OWNER : "";
@@ -33,11 +43,11 @@ async function getRepoTreeRecursive():Promise<any[]> {
   const { data }:any = await octokit.rest.git.getTree({
     owner,
     repo,
-    tree_sha: "74d7dd6e107e361ad18244d5b5daaeb7cb1ca9cd",
+    tree_sha: "cd41530f6b8ce3113c33c58de764b9fc15a4792d",
     recursive: "1",
   });
 
-  let files:any = await data.tree.filter((item:any) => item.type === "blob");
+  let files:any[] = await data.tree.filter((item:any) => item.type === "blob");
 
   return files;
 }

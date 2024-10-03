@@ -3,7 +3,7 @@ import getOrCreateVectorStore from "../clients/vectorStoreConfig.js";
 import uploadAllRepoFilesToOpenAi from "../fileSearchLoader.js";
 // import { deleteAllOpenAiFiles } from "./api/files/testingFilesManagement.js";
 // import { removeAllTempFiles } from "./api/files/testingFilesManagement.js";
-import { GET as getVectorFileList } from "../../api/assistant/file_search/vector_store.js";
+import { GET as getVectorFileList } from "../../AiApi/assistant/file_search/vector_store.js";
 
 export default async function initializeAssistant() {
   // deleteAllOpenAiFiles();

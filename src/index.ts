@@ -3,8 +3,8 @@ import initializer from "./utils/initializerProcess/initializer.js";
 import issueIntake from "./AiCompletions/workflows/issueIntake.js";
 import issueCommentCreated from "./AiCompletions/workflows/issueWatcher.js";
 import uploadAllRepoFilesToOpenAi from "./utils/fileSearchLoader.js";
-import { deleteAllOpenAiFiles } from "./api/files/testingFilesManagement.js";
-import { removeAllTempFiles } from "./api/files/testingFilesManagement.js";
+import { deleteAllOpenAiFiles } from "./AiApi/files/testingFilesManagement.js";
+import { removeAllTempFiles } from "./AiApi/files/testingFilesManagement.js";
 
 
 export default (app: Probot) => {

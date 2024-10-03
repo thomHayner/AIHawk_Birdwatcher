@@ -13,12 +13,13 @@ export default (app: Probot) => {
   *  The first order of business will be to setup and configure the OpenAI Assistant and Vector Store
   *  
   */
- 
+
   (async () =>  {
+    // await deleteAllOpenAiFiles();
     await initializer();
     await removeAllTempFiles();
   })();
-
+  
   // // The following is a cleanup script to delete all Local temp-files and all OpenAI files
   // (async () =>  {
   //   await deleteAllOpenAiFiles();

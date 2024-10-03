@@ -3,6 +3,9 @@ import initializer from "./utils/initializerProcess/initializer.js";
 import issueIntake from "./AiCompletions/workflows/issueIntake.js";
 import issueCommentCreated from "./AiCompletions/workflows/issueWatcher.js";
 import uploadAllRepoFilesToOpenAi from "./utils/fileSearchLoader.js";
+import { deleteAllOpenAiFiles } from "./api/files/testingFilesManagement.js";
+import { removeAllTempFiles } from "./api/files/testingFilesManagement.js";
+
 
 export default (app: Probot) => {
   /* 
@@ -10,7 +13,11 @@ export default (app: Probot) => {
   *  The first order of business will be to setup and configure the OpenAI Assistant and Vector Store
   *  
   */
-  (async () =>  await initializer())();
+ (async () =>  await initializer())();
+  // (async () =>  {
+  //   await deleteAllOpenAiFiles();
+  //   await removeAllTempFiles();
+  // })();
 
   // When a new issue is opened:
   app.on("issues.opened", async (context) => {

@@ -92,6 +92,13 @@ export async function removeAllTempFiles(){
     await fsPromises.unlink("src/temp/utils.py");
   }
 
-  // await fsPromises.unlink("tempFilePath");
-  // await fsPromises.unlink("tempFilePath");
+  // if (fs.existsSync("tempFilePath")){
+  //   await fsPromises.unlink("tempFilePath");
+  // }
+  // if (fs.existsSync("tempFilePath")){
+  //   await fsPromises.unlink("tempFilePath");
+  // }
+
+  console.log("All temp files have been deleted from the local repo file system");
+
 }

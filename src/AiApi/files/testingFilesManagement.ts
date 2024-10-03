@@ -3,12 +3,21 @@ import * as fs from "node:fs";
 import * as fsPromises from "node:fs/promises";
 import { GET as getFileList } from "./files.js";
 
-export async function deleteAllOpenAiFiles() {
-  let fileList = await getFileList();
+interface OpenAiFile {
+  file_id: string;
+}
 
-  await Promise.all(fileList.map(async (file):Promise<any> => {
+interface FileListResponse {
+  json():Promise<OpenAiFile[]>;
+}
+
+export async function deleteAllOpenAiFiles() {
+  const response:FileListResponse = await getFileList();
+  const fileList:OpenAiFile[] = await response.json();
+
+  await Promise.all(fileList.map(async (file:OpenAiFile):Promise<void> => {
     await openai.files.del(file.file_id);
-  }))
+  }));
   console.log("All files have been deleted from OpenAI");
 }
 

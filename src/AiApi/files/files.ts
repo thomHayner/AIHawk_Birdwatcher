@@ -11,8 +11,7 @@ export async function GET() {
       };
     })
   );
-  // return Response.json(filesArray);
-  return filesArray;
+  return Response.json(filesArray);
 }
 
 // delete file from assistant's vector store

@@ -1,7 +1,7 @@
 import { openai } from "../../utils/clients/openai.js";
 import * as fs from "node:fs";
 import * as fsPromises from "node:fs/promises";
-import { GET as getFileList } from "./files.js";
+import { GET as getFileList } from "./route.js";
 
 interface OpenAiFile {
   file_id: string;

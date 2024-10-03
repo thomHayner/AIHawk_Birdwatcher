@@ -5,6 +5,7 @@ import * as fsPromises from "node:fs/promises";
 import nodepath from "node:path";
 import findOrCreateVectorStore from "./clients/vectorStoreConfig.js";
 import { GET as getVectorFileList, POST as addFileToVectorStore } from "../api/assistant/file_search/vector_store.js";
+import { OctokitResponse } from "@octokit/types";
 
 // This still needs a helper to replace updated duplicate files on a push/pr (to main only)
 
@@ -50,11 +51,11 @@ export default async function uploadAllRepoFilesToOpenAi():Promise<void> {
   console.log("All files matching OpenAI Supported Filetypes have been uploaded")
 }
 
-export async function updateRepoFilesToOpenAiOnPush(pullRequestFiles:any[]):Promise<void> {
-  // const pullRequestFiles:any[] = await getPullRequestFiles();
+export async function updateRepoFilesToOpenAiOnPush(pullRequestFiles:RepoFile[]):Promise<void> {
+  // const pullRequestFiles:RepoFile[] = await getPullRequestFiles();
   const vectorStoreFileList = await getVectorFileList();
 
-  await Promise.all(pullRequestFiles.map(async (file:any):Promise<any> => {
+  await Promise.all(pullRequestFiles.map(async (file:RepoFile):Promise<any> => {
     const duplicate = await checkForDuplicateFile(vectorStoreFileList, file);
     if (duplicate) {
       console.log(`${file.path} was skipped because it is already in the Vector Store`);
@@ -78,24 +79,24 @@ async function checkForDuplicateFile(vectorStoreFileList:VectorStoreFile[], file
 }
 
 // Gets a list with info of any repo files updated in a Pull Request
-async function getPullRequestFiles():Promise<any[]> {
+async function getPullRequestFiles():Promise<RepoFile[]> {
   return [];
 }
 
 // Gets a list with info of all repo files
-async function getRepoTreeRecursive():Promise<any[]> {
+async function getRepoTreeRecursive():Promise<RepoFile[]> {
   const owner:string = process.env.OWNER ? process.env.OWNER : "";
   const repo:string = process.env.REPO ? process.env.REPO : "";
 
   // // get a list of all files in each directory (starting with root)
-  const { data }:any = await octokit.rest.git.getTree({
+  const { data }:OctokitResponse<any> = await octokit.rest.git.getTree({
     owner,
     repo,
     tree_sha: "cd41530f6b8ce3113c33c58de764b9fc15a4792d",
     recursive: "1",
   });
 
-  let files:any[] = await data.tree.filter((item:any) => item.type === "blob");
+  let files:RepoFile[] = await data.tree.filter((item:RepoFile) => item.type === "blob");
 
   return files;
 }
@@ -124,7 +125,7 @@ async function fileTypeIsolater(path:string):Promise<string> {
 // 2. Creates a local tempFile,
 // 3. Uploads the tempFile to an OpenAI Cloud Vector Store instance,
 // 4. Deletes the local tempFile.
-async function fileDecodeAndUpload(file:any):Promise<any> {
+async function fileDecodeAndUpload(file:RepoFile):Promise<Response> {
   const owner:string = process.env.OWNER ? process.env.OWNER : "";
   const repo:string = process.env.REPO ? process.env.REPO : "";
 
@@ -146,7 +147,7 @@ async function fileDecodeAndUpload(file:any):Promise<any> {
 
   const fileName:string = await fileNameIsolater(file.path);
 
-  const fileContent:any = await octokit.repos.getContent({
+  const fileContent:OctokitResponse<any> = await octokit.repos.getContent({
     owner,
     repo,
     path: file.path,
@@ -214,7 +215,12 @@ async function fileDecodeAndUpload(file:any):Promise<any> {
   async function getMimeType(fileType: string): Promise<string> {
     return new Promise((resolve) => {
       const mimeTypeObj = supportedTypes.find((type) => type.ext === fileType);
-      resolve(mimeTypeObj.mime);
+      if (mimeTypeObj) {
+        resolve(mimeTypeObj.mime);
+      } else {
+        console.log(`${file.path} was skipped because its mime type is not supported`);
+        return;
+      }
     });
   }
   

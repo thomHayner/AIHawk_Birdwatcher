@@ -25,11 +25,23 @@ export default async function uploadAllRepoFilesToOpenAi():Promise<void> {
     }
   }))
   console.log("All files matching OpenAI Supported Filetypes have been uploaded")
-  await Promise.all(files.map(async (file): Promise<any> => {
-    await fileDecodeAndUpload(file);
+}
 
+export async function updateRepoFilesToOpenAiOnPush(pullRequestFiles:any[]):Promise<void> {
+  // const pullRequestFiles:any[] = await getPullRequestFiles();
+  const vectorStoreFileList = await getFileList();
+
+  await Promise.all(pullRequestFiles.map(async (file:any):Promise<any> => {
+    const duplicate = await checkForDuplicateFile(vectorStoreFileList, file);
+    if (duplicate) {
+      console.log(`${file.path} was skipped because it is already in the Vector Store`);
+      return;
+    } else {
+      await fileDecodeAndUpload(file);
+      // await addFileToVectorStore(file);
+    }
+    console.log("All updated files --from the most recent approved Pull Request, and matching OpenAI Supported Filetypes-- have been uploaded")
   }))
-  console.log("All files matching OpenAI Supported Filetypes have been Uploaded")
 }
 
 /* Helper functions */
@@ -43,6 +55,10 @@ async function checkForDuplicateFile(vectorStoreFileList:any[], fileToAdd:any):P
   }
 }
 
+// Gets a list with info of any repo files updated in a Pull Request
+async function getPullRequestFiles():Promise<any[]> {
+  return [];
+}
 
 // Gets a list with info of all repo files
 async function getRepoTreeRecursive():Promise<any[]> {

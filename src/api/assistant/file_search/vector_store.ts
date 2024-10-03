@@ -1,11 +1,14 @@
-import { openai } from "../../../utils/openai.js";
-import { assistantId } from "../../../utils/assistant-config.js";
+import { openai } from "../../../utils/clients/openai.js";
+import getAssistantId from "../../../utils/clients/assistantConfig.js";
+import getVectorStore from "../../../utils/clients/vectorStoreConfig.js";
+
+const assistantId = await getAssistantId(); // get or create Assistant
+const vectorStoreId = await getVectorStore(); // get or create Vector Store
 
 // upload file to assistant's vector store
 export async function POST(request: { formData: () => any; }) { 
   const formData = await request.formData(); // process file as FormData
   const file = formData.get("file"); // retrieve the single file from FormData
-  const vectorStoreId = await getOrCreateVectorStore(); // get or create vector store
 
   // upload using the file stream
   const openaiFile = await openai.files.create({
@@ -39,7 +42,8 @@ export async function GET() {
       };
     })
   );
-  return Response.json(filesArray);
+  // return Response.json(filesArray);
+  return filesArray;
 }
 
 // delete file from assistant's vector store

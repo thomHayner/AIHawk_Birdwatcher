@@ -1,4 +1,4 @@
-import { openai } from "./openai.js";
+import { POST as createNewAssistant } from "../../AiApi/assistant/assistant.js";
 
 export const assistantName:string = 'GitHub Repo Maintainer';
 
@@ -16,6 +16,8 @@ Use active voice, be clear and concise, tone: 80% spartan. Only answer questions
 `;
 
 export const assistantTools:any[] = [
+  { type: "file_search" },
+  { type: "code_interpreter" },
   {
     type: "function",
     function: {
@@ -46,6 +48,74 @@ export const assistantTools:any[] = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "add_primary_label",
+      description: "Add a label to an Issue.",
+      parameters: {
+        type: "object",
+        properties: {
+          label: {
+            type: "string",
+            enum: ["bug", "documentation", "enhancement", "question"],
+          },
+        },
+        required: ["label"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "add_duplicate_label",
+      description: "Add a label to an Issue.",
+      parameters: {
+        type: "object",
+        properties: {
+          label: {
+            type: "string",
+            enum: ["duplicate", "unique"],
+          },
+        },
+        required: ["label"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "add_secondary_label",
+      description: "Add a label to an Issue.",
+      parameters: {
+        type: "object",
+        properties: {
+          label: {
+            type: "string",
+            enum: ["bug", "documentation", "enhancement", "question", "duplicate", "unique", "good first issue", "help wanted", "wontfix", "invalid", "intake"],
+          },
+        },
+        required: ["label"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "remove_label",
+      description: "Remove a label from an Issue.",
+      parameters: {
+        type: "object",
+        properties: {
+          label: {
+            type: "string",
+            enum: ["bug", "documentation", "enhancement", "question", "duplicate", "unique", "good first issue", "help wanted", "wontfix", "invalid", "intake"],
+          },
+        },
+        required: ["label"],
+      },
+    },
+  },
 ];
 
 export const assistantModel:string = 'gpt-4o';
@@ -66,20 +136,17 @@ export default async function getOrCreateAssistant():Promise<string> {
       // TODO: then set the value OPENAI_ASSISTANT_ID key in the .env file to the user's terminal input
     // } else if (askQuestion === "y" || askQuestion === "yes" || askQuestion === "Y" || askQuestion === "Yes" || askQuestion === "YES") {}
 
-    const assistant = await openai.beta.assistants.create({
-      name: assistantName,
-      instructions: assistantSystemPrompt,
-      tools: [{ type: "code_interpreter" }, {"type": "file_search"}],
-      model: assistantModel,
-    });
+    const response = await createNewAssistant();
+    const assistant = await response.json();
 
     // As well as the value to be returned
-    assistantId = assistant.id
+    assistantId = assistant.id;
+    
     // Then set the value for the OPENAI_ASSISTANT_ID key in the .env file
     // TODO: this should use node:fs (and dotenv? or no due to node v20+) to write to the .env file
     process.env.OPENAI_ASSISTANT_ID = assistantId;
 
     console.log("Assistant created.");
   }
-  return assistantId;
+  return assistantId!;
 }

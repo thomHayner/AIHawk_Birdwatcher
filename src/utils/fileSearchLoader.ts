@@ -101,12 +101,13 @@ async function checkForDuplicateFile(vectorStoreFileList:VectorStoreFile[], file
 async function getRepoTreeRecursive():Promise<RepoFile[]> {
   const owner:string = process.env.OWNER ? process.env.OWNER : "";
   const repo:string = process.env.REPO ? process.env.REPO : "";
+  const tree_sha:string=process.env.TREE_SHA ? process.env.TREE_SHA : "";
 
   // // get a list of all files in each directory (starting with root)
   const { data }:OctokitResponse<any> = await octokit.rest.git.getTree({
     owner,
     repo,
-    tree_sha: "cd41530f6b8ce3113c33c58de764b9fc15a4792d",
+    tree_sha,
     recursive: "1",
   });
 
@@ -207,28 +208,6 @@ async function fileDecodeAndUpload(file:RepoFile):Promise<Response> {
   const tempFilePath:string = nodepath.join("src", "temp", fileName);
   await fsPromises.writeFile(tempFilePath, decodedContent);
 
-  // await fsPromises.unlink(tempFilePath);
-  
-
-  // ////////// START: File Method (1) //////////
-  // // upload the file to OpenAI
-  // const openaiFile:any = await openai.files.create({
-  //   file: fs.createReadStream(tempFilePath),
-  //   purpose: "assistants",
-  // });
-
-  // // add file to vector store
-  // await openai.beta.vectorStores.files.create(vectorStoreId, {
-  //   file_id: openaiFile.id,
-  // });
-  
-  // // delete the temporary file
-  // await fsPromises.unlink(tempFilePath);
-  
-  // console.log(`Uploaded ${file.path} to OpenAI with file ID: ${openaiFile.id}`);
-  // ////////// END: File Method (1) //////////
-  
-  ////////// START: Upload Method (2) //////////
   // define a helper to get the mime type
   async function getMimeType(fileType: string): Promise<string> {
     return new Promise((resolve) => {
@@ -293,7 +272,6 @@ async function fileDecodeAndUpload(file:RepoFile):Promise<Response> {
   await fsPromises.unlink(tempFilePath);
   
   console.log(`Uploaded ${file.path} to OpenAI with file ID: ${openaiUploadCompletion.id}`);
-  ////////// END: Upload Method (2) //////////
   
   return new Response();
 }

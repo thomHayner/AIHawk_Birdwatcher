@@ -4,7 +4,7 @@ import * as fs from "node:fs";
 import * as fsPromises from "node:fs/promises";
 import nodepath from "node:path";
 import findOrCreateVectorStore from "./clients/vectorStoreConfig.js";
-import { GET as getVectorFileList, POST as addFileToVectorStore } from "../AiApi/assistant/file_search/vector_store.js";
+import { GET as getVectorFileList, POST as addFileToVectorStore } from "../AiApi/assistants/files/route.js";
 import { OctokitResponse } from "@octokit/types";
 
 // This still needs a helper to replace updated duplicate files on a push/pr (to main only)

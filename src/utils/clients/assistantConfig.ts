@@ -1,4 +1,4 @@
-import { POST as createNewAssistant } from "../../AiApi/assistant/route.js";
+import { POST as createNewAssistant } from "../../AiApi/assistants/route.js";
 
 export const assistantName:string = 'GitHub Repo Maintainer';
 

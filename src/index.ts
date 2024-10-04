@@ -15,7 +15,7 @@ export default (app: Probot) => {
   */
 
   (async () =>  {
-    // await deleteAllOpenAiFiles();
+    await deleteAllOpenAiFiles();
     await initializer();
     await removeAllTempFiles();
   })();
